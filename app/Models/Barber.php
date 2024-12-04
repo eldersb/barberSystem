@@ -9,7 +9,7 @@ class Barber extends Model
 {
     use HasFactory;
 
-    protected $filalble = [
+    protected $fillable = [
         "name",
         "telephone",
         "status"

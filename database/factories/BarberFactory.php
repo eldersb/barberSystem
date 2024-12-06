@@ -19,7 +19,7 @@ class BarberFactory extends Factory
         return [
             "name" => $this->faker->name(),
             "telephone" => $this->faker->phoneNumber(),
-            "status" => $this-> faker->word()
+            "status" => $this->faker->randomElement(['Disponível', 'Indisponível'])
         ];
     }
 }

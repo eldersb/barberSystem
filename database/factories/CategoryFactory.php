@@ -18,6 +18,6 @@ class CategoryFactory extends Factory
     {
         return [
             "name" => $this->faker->name(),
-            'price' => number_format($this->faker->randomFloat(2, 10, 500), 2, '.', ''),        ];
+            'price' => number_format($this->faker->randomFloat(2, 10, 100), 2, '.', ''),];
     }
 }

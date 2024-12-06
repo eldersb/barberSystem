@@ -12,6 +12,21 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory(3)->create();
+        // Category::factory(5)->create();
+
+        $categories = [
+            ['name' => 'Corte máquina', 'price' => 20], 
+            ['name' => 'Corte navalhado', 'price' => 25], 
+            ['name' => 'Corte tesoura', 'price' => 25],
+            ['name' => 'Barba', 'price' => 10],
+            ['name' => 'Sobrancelha', 'price' => 5],
+        ];
+
+        foreach ($categories as $category) {
+            Category::create($category);
+        }
     }
-}
+}   
+
+
+

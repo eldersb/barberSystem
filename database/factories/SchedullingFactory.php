@@ -17,12 +17,13 @@ class SchedullingFactory extends Factory
     public function definition(): array
     {
         return [
-            "barber_id" => $this->faker->numberBetween(1, 10),
-            "client_id" => $this->faker->numberBetween(1, 10),
+            "barber_id" => $this->faker->numberBetween(1, 5),
+            "client_id" => $this->faker->numberBetween(1, 5),
             "category_id" => $this->faker->numberBetween(1, 5),
             "serviceTime" => $this->faker->date($format = 'Y-m-d', $max = '2005-12-31'),
             "serviceValue" => number_format($this->faker->randomFloat(2, 10, 100), 2, '.', ''),
-            "status" => $this->faker->word()
+            "payment" => $this->faker->randomElement(['Cartão', 'Pix', 'Dinheiro']),
+            "status" => $this->faker->randomElement(['Em andamento', 'Finalizado'])
         ];
     }
 }

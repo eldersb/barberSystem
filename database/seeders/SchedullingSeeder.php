@@ -12,7 +12,7 @@ class SchedullingSeeder extends Seeder
      */
     public function run(): void
     {
-        Schedulling::factory(3)->create();
+        Schedulling::factory(5)->create();
 
     }
 }

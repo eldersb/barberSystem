@@ -15,6 +15,7 @@ class Schedulling extends Model
         "category_id",
         "serviceTime",
         "serviceValue",
+        "payment",
         "status" 
     ];
 

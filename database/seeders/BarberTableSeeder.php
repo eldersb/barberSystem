@@ -12,6 +12,6 @@ class BarberTableSeeder extends Seeder
      */
     public function run(): void
     {
-       Barber::factory(3)->create();
+       Barber::factory(5)->create();
     }
 }

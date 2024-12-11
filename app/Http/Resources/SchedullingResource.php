@@ -14,6 +14,15 @@ class SchedullingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'barber_id' => $this->id, 
+            'client_id' => $this->client_id, 
+            'category_id' => $this->category_id,
+            'serviceTime' => $this->serviceTime,
+            'serviceValue' => $this->serviceValue,
+            'payment' => $this->payment,
+            'status' => $this->status 
+        ];
+
     }
 }

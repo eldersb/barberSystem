@@ -22,20 +22,21 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric'
+            'name' => 'required|string|min:3',
+            'price' => 'required|numeric|min:0.01'
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'O nome é obrigatório.',
-            'name.string' => 'O nome deve ser uma string.',
-
-            'price.required' => 'O preço é obrigatório.',
-            'price.numeric' => 'O preço deve ser um número.'
-
+            'name.required' => 'O campo nome não pode ser nulo.',
+            'name.min' => 'O nome deve ter mais que 3 caracteres.',
+            'price.required' => 'O campo preço não pode ser nulo',
+            'price.numeric' => 'O preço deve ser um número.',
+            'price.min' => 'O preço deve ser maior que zero.'
         ];
     }
+
+    
 }

@@ -6,7 +6,6 @@ use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -24,9 +23,13 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
+
+        dd('Requisição chegou!'); 
+        
         $category = Category::create($request->validated());
 
         return response()->json(new CategoryResource($category), 201);
+
     }
 
     /**

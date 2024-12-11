@@ -31,6 +31,12 @@ class BarberController extends Controller
      */
     public function store(BarberRequest $request)
     {
+        // if ($request->fails()) {
+        //     return response()->json([
+        //         'error' => $request->errors(),
+        //     ], 422); // Status code 422 para erro de validação
+        // }
+
         $barber = Barber::create($request->validated()); // Verificar erro de validação
 
         return response()->json(new BarberResource($barber), 201);

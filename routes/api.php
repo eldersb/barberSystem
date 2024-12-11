@@ -3,6 +3,7 @@
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SchedullingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('barber', BarberController::class);
 Route::apiResource('client', ClientController::class);
 Route::apiResource('category', CategoryController::class);
+Route::apiResource('schedulling', SchedullingController::class);
+
 
 
 

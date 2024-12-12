@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('clients'); 
             $table->foreignId('barber_id')->constrained('barbers'); 
             $table->foreignId('category_id')->constrained('categories');
-            $table->timestamp('serviceTime');
+            $table->dateTime('serviceTime');
             $table->string('status');
             $table->decimal('serviceValue', 8, 2);
             $table->string('payment');

@@ -14,6 +14,6 @@ class Category extends Model
         "price"
     ];
 
-    protected $table = "category";
+    protected $table = "categories";
 
 }

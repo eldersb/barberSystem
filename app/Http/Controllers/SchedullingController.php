@@ -25,8 +25,10 @@ class SchedullingController extends Controller
     public function store(SchedullingRequest $request)
     {
 
-        $schedulling = Schedulling::create($request->validated()); // Erro de validação
+        // dd($request->all());
 
+        $schedulling = Schedulling::create($request->validated()); 
+        
         return response()->json(new SchedullingResource($schedulling), 201);
 
     }

@@ -22,7 +22,7 @@ class BarberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3',
+            'name' => 'required|string|min:3|unique:barbers,name',
             'telephone' => 'required|numeric|digits:11',
             'status' => 'required|string|in:Disponível,Indisponível',       
         ];
@@ -32,9 +32,13 @@ class BarberRequest extends FormRequest
     {
         return [
             'name.required' => 'O nome do barbeiro é obrigatório.',
+            'name.unique' => 'O nome desse barbeiro já existe.',
+            'name.min' => 'O nome deve ter no mínimo 3 caracteres!',
+
             'telephone.required' => 'O telefone é obrigatório.',
             'telephone.numeric' => 'O telefone deve conter números',
             'telephone.digits' => 'O telefone deve conter até 11 digitos.',
+
             'status.required' => 'O status é obrigatório.',
             'status.in' => 'O status deve ser "Disponível" ou "Indisponível".'
         ];

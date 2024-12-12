@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Dotenv\Exception\ValidationException;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest

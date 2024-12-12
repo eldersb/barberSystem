@@ -22,8 +22,8 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'telephone' => 'required|string',
+            'name' => 'required|string|min:3|unique:clients,name',
+            'telephone' => 'required|numeric|max:11',
             'address' => 'required|string',
             'birthDate' => 'required|date|before_or_equal:today'
         ];
@@ -33,10 +33,13 @@ class ClientRequest extends FormRequest
     {
             return [
                 'name.required' => 'O nome é obrigatório.',
-                'name.string' => 'O nome deve ser uma string.',
+                'name.string' => 'O nome deve ser válido.',
+                'name.unique' => 'O nome desse cliente já existe.',
+                'name.min' => 'O nome deve conter no mínimo 3 caracteres',
 
                 'telephone.required' => 'O telefone é obrigatório.',
-                'telephone.string' => 'O telefone deve ser uma string.',
+                'telephone.numeric' => 'O telefone conter números.',
+                'telephone.max' => 'O telefone deve conter no máximo 11 digitos.',
                 
                 'address.required' => 'O endereço é obrigatório.',
                 'address.string' => 'O endereço deve ser uma string.',

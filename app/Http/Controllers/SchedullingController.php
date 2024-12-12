@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SchedullingRequest;
 use App\Http\Resources\SchedullingResource;
+use App\Models\Category;
 use App\Models\Schedulling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -25,11 +26,29 @@ class SchedullingController extends Controller
     public function store(SchedullingRequest $request)
     {
 
+        $categoryIds = $request->category_ids;
+
+        // Calculando o valor total somando os preços das categorias selecionadas
+        $totalValue = Category::whereIn('id', $categoryIds)->sum('price');
+    
+        // Criando o agendamento com o valor total calculado
+        $schedulling = Schedulling::create([
+            'barber_id' => $request->barber_id,
+            'client_id' => $request->client_id,
+            'serviceTime' => $request->serviceTime,
+            'serviceValue' => $totalValue,  // Atribuindo o valor total calculado
+            'payment' => $request->payment,
+            'status' => $request->status,
+        ]);
+    
+        // Retornando o recurso do agendamento criado
+        return response()->json(new SchedullingResource($schedulling), 201);
+
         // dd($request->all());
 
-        $schedulling = Schedulling::create($request->validated()); 
+        // $schedulling = Schedulling::create($request->validated()); 
         
-        return response()->json(new SchedullingResource($schedulling), 201);
+        // return response()->json(new SchedullingResource($schedulling), 201);
 
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SchedullingRequest;
 use App\Http\Resources\SchedullingResource;
 use App\Models\Schedulling;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SchedullingController extends Controller
@@ -19,13 +20,19 @@ class SchedullingController extends Controller
    
     public function store(SchedullingRequest $request)
     {
-        $schedulling = Schedulling::create($request->validated());
+        try {
+            $schedulling = Schedulling::createService($request->validated());
+    
+            $schedulling->CalculateTotalService($request->categories);
+    
+            $schedulling->load('categories');
+    
+            return response()->json(new SchedullingResource($schedulling), 201);
+    
+        } catch (ValidationException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
 
-        $schedulling->associateCategoriesAndCalculateTotal($request->categories);
-    
-        $schedulling->load('categories');
-    
-        return response()->json(new SchedullingResource($schedulling), 201);
     }
     
 

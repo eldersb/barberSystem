@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('barber', BarberController::class);
 Route::apiResource('client', ClientController::class);
 Route::apiResource('category', CategoryController::class);
+Route::get('schedulling/barber/{barberName}', [SchedullingController::class, 'indexByBarberName']);
 Route::apiResource('schedulling', SchedullingController::class);
 
 

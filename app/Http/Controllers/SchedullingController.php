@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SchedullingRequest;
 use App\Http\Resources\SchedullingResource;
+use App\Models\Barber;
 use App\Models\Schedulling;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,10 +15,27 @@ class SchedullingController extends Controller
     public function index()
     {
         $schedullings = Schedulling::all();
-        return response()->json($schedullings);
+
+        $schedullings->load('categories');
+
+        return response()->json(SchedullingResource::collection($schedullings));
     }
 
-   
+    public function indexByBarberName($barberName)
+    {
+        $barber = Barber::where('name', 'like', '%' . $barberName . '%')->first();
+
+        if (!$barber) {
+            return response()->json(['message' => 'Barbeiro não encontrado'], 404);
+        }
+
+        $schedullings = Schedulling::where('barber_id', $barber->id)->get();
+
+        $schedullings->load('categories');
+
+        return response()->json(SchedullingResource::collection($schedullings));
+    }
+
     public function store(SchedullingRequest $request)
     {
         try {
@@ -35,12 +53,14 @@ class SchedullingController extends Controller
 
     }
     
-
     public function show(string $id)
     {
         try {
             $schedulling = Schedulling::findOrFail($id);
-            return response()->json($schedulling);
+
+            $schedulling->load('categories');
+
+            return response()->json(new SchedullingResource($schedulling));
             
         } catch (ModelNotFoundException $e) {
             return response()->json([
@@ -49,24 +69,27 @@ class SchedullingController extends Controller
         }
     }
 
-    
     public function update(SchedullingRequest $request, string $id)
     {
-        try{
+        try {       
             $schedulling = Schedulling::findOrFail($id);
 
-            $schedulling->update($request->validated());
+            $schedulling = $schedulling->updateSchedullingWithCategories(
+                $request->validated(), 
+                $request->categories
+            );
+
+            $schedulling->load('categories');
 
             return response()->json(new SchedullingResource($schedulling), 200);
-
-        }catch(ModelNotFoundException $e) {
+    
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => "Agendamento não encontrado!",
             ], 404);
         }
     }
 
-    
     public function destroy(string $id)
     {
         try {

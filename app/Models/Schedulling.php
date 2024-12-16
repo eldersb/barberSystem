@@ -28,10 +28,16 @@ class Schedulling extends Model
             ->withPivot('price'); 
     }
 
-    public static function existsAtSameTime($barberId, $clientId, $serviceTime)
+    public static function existsForBarberAtSameTime($barberId, $serviceTime)
     {
         return self::where('barber_id', $barberId)
-            ->where('client_id', $clientId)
+            ->where('serviceTime', $serviceTime)
+            ->exists();
+    }
+
+    public static function existsForClientAtSameTime($clientId, $serviceTime)
+    {
+        return self::where('client_id', $clientId)
             ->where('serviceTime', $serviceTime)
             ->exists();
     }
@@ -42,27 +48,48 @@ class Schedulling extends Model
         $clientId = $data['client_id'];
         $serviceTime = $data['serviceTime'];
 
-        
-        if (self::existsAtSameTime($barberId, $clientId, $serviceTime)) {
-            throw new ValidationException('Já existe um agendamento para este cliente e barbeiro nesse horário.');
+        if (self::existsForBarberAtSameTime($barberId, $serviceTime)) {
+            throw new ValidationException('Este barbeiro já tem um agendamento nesse horário.');
+        }
+
+        if (self::existsForClientAtSameTime($clientId, $serviceTime)) {
+            throw new ValidationException('Este cliente já tem um agendamento nesse horário.');
         }
 
         return self::create($data);
+    }
+
+    public function updateSchedullingWithCategories($data, $categories)
+    {
+        $this->update($data);
+
+        $categories = Category::whereIn('id', $categories)->get();
+
+        $totalValue = $categories->sum('price');
+
+        $this->serviceValue = $totalValue;
+        $this->save();
+
+        $pivotData = [];
+        foreach ($categories as $category) {
+            $pivotData[$category->id] = ['price' => $category->price];
+        }
+
+        $this->categories()->sync($pivotData);
+
+        return $this;
     }
 
     public function CalculateTotalService(array $categoryIds)
     {
         $categories = Category::whereIn('id', $categoryIds)->get();
         
-        // Calcula o valor total somando os preços das categorias
         $totalValue = $categories->sum('price');
         
-        // Associa as categorias ao agendamento
         foreach ($categories as $category) {
             $this->categories()->attach($category->id, ['price' => $category->price]);
         }
 
-        // Atualiza o valor total no agendamento
         $this->serviceValue = $totalValue;
         $this->save();
     }

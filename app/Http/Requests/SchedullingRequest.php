@@ -24,8 +24,8 @@ class SchedullingRequest extends FormRequest
         return [
             'barber_id' => 'required|exists:barbers,id',  
             'client_id' => 'required|exists:clients,id',  
-            'category_ids' => 'required|array', 
-            'category_ids**' => 'exists:categories, id',  
+            'categories' => 'required|array', 
+            'categories.*' =>  'required|exists:categories,id',
             'serviceTime' => 'required|date|after_or_equal:today', 
             'payment' => 'required|string|in:Dinheiro,Pix,Débito,Crédito', 
             'status' => 'required|in:Em andamento,Finalizado'
@@ -35,13 +35,10 @@ class SchedullingRequest extends FormRequest
     public function messages()
     {
         return [
-           'barber_id.required' => 'O campo Barber ID é obrigatório.',
+            'barber_id.required' => 'O campo Barber ID é obrigatório.',
             'barber_id.exists' => 'O barbeiro especificado não existe.',
             'client_id.required' => 'O campo Client ID é obrigatório.',
             'client_id.exists' => 'O cliente especificado não existe.',
-            'category_ids.required' => 'O campo Category IDs é obrigatório.',
-            'category_ids.array' => 'O campo Category IDs deve ser um array.',
-            'category_ids.*.exists' => 'Uma das categorias especificadas não existe.',
             'serviceTime.required' => 'O campo Service Time é obrigatório.',
             'serviceTime.date' => 'O campo Service Time deve ser uma data válida.',
             'serviceTime.after_or_equal' => 'O campo Service Time não pode ser uma data no passado.',

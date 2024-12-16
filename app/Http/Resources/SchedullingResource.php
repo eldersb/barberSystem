@@ -15,9 +15,10 @@ class SchedullingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'barber_id' => $this->id, 
+            'id' => $this->id,
+            'barber_id' => $this->barber_id, 
             'client_id' => $this->client_id, 
-            'category_id' => $this->category_id,
+            'categories' => CategoryResource::collection($this->whenLoaded('categories')), 
             'serviceTime' => $this->serviceTime,
             'serviceValue' => $this->serviceValue,
             'payment' => $this->payment,

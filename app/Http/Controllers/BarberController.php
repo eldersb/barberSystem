@@ -10,13 +10,6 @@ use Illuminate\Http\Request;
 
 class BarberController extends Controller
 {
-   
-    // private $barber;
-
-    // public function __construct(Barber $barber)
-    // {
-    //     $this->barber = $barber;
-    // }
 
     public function index(Request $request)
     {
@@ -26,9 +19,6 @@ class BarberController extends Controller
         // return BarberResource::collection($barbers);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(BarberRequest $request)
     {
         $barber = Barber::create($request->validated()); 
@@ -36,9 +26,6 @@ class BarberController extends Controller
         return response()->json(new BarberResource($barber), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         try {
@@ -52,9 +39,6 @@ class BarberController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(BarberRequest $request, string $id)
     {
 
@@ -77,9 +61,6 @@ class BarberController extends Controller
         // return response()->json(new BarberResource($barber), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
 

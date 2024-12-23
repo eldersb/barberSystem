@@ -6,6 +6,7 @@ use App\Http\Requests\SchedullingRequest;
 use App\Http\Resources\SchedullingResource;
 use App\Models\Barber;
 use App\Models\Schedulling;
+use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -102,6 +103,17 @@ class SchedullingController extends Controller
                 'status' => false,
                 'message' => 'Agendamento não encontrado.'
             ], 404);
+        }
+    }
+
+    public function searchForDay($data)
+    {
+        try {
+            $schedullings = Schedulling::forDay($data)->get();
+
+            return response()->json($schedullings);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao processar a data'], 400);
         }
     }
 }

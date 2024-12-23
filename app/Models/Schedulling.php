@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -42,11 +43,33 @@ class Schedulling extends Model
             ->exists();
     }
 
-    public static function createService(array $data)
+    public function scopeForDay($query, $date)
     {
-        $barberId = $data['barber_id'];
-        $clientId = $data['client_id'];
-        $serviceTime = $data['serviceTime'];
+        $startDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $endDate = Carbon::createFromFormat('Y-m-d', $date)->endOfDay();
+
+        return $query->whereBetween('serviceTime', [$startDate, $endDate]);
+    }
+
+    public static function validateServiceTime($barberId, $clientId, $serviceTime)
+    {
+        $timezone = 'America/Sao_Paulo';
+
+        $serviceTimeCarbon = Carbon::createFromFormat('Y-m-d H:i:s', $serviceTime, $timezone);
+        
+        $startOfDay = Carbon::createFromTime(9, 0, 0, $timezone);   // 09:00
+        $endOfDay = Carbon::createFromTime(20, 0, 0, $timezone);    // 20:00
+
+        if ($serviceTimeCarbon->lt($startOfDay) || $serviceTimeCarbon->gt($endOfDay)) {
+            throw new ValidationException('O horário do agendamento deve estar entre 09:00 e 20:00.');
+        }
+
+        $now = Carbon::now($timezone)->copy()->setSeconds(0)->setMilliseconds(0);
+
+        if ($serviceTimeCarbon->lt($now)) {
+            throw new ValidationException('O agendamento não pode ser feito para um horário anterior ao horário atual.');
+        }
+
 
         if (self::existsForBarberAtSameTime($barberId, $serviceTime)) {
             throw new ValidationException('Este barbeiro já tem um agendamento nesse horário.');
@@ -55,28 +78,45 @@ class Schedulling extends Model
         if (self::existsForClientAtSameTime($clientId, $serviceTime)) {
             throw new ValidationException('Este cliente já tem um agendamento nesse horário.');
         }
-
-        return self::create($data);
     }
 
+
+    public static function createService(array $data)
+    {
+        $barberId = $data['barber_id'];
+        $clientId = $data['client_id'];
+        $serviceTime = $data['serviceTime'];
+    
+        self::validateServiceTime($barberId, $clientId, $serviceTime);
+    
+        return self::create($data);
+    }
+    
     public function updateSchedullingWithCategories($data, $categories)
     {
-        $this->update($data);
+            
+        $barberId = $data['barber_id'];  
+        $clientId = $data['client_id'];  
+        $serviceTime = $data['serviceTime'];  
 
+        self::validateServiceTime($barberId, $clientId, $serviceTime); 
+
+        $this->update($data); 
+        
         $categories = Category::whereIn('id', $categories)->get();
-
+        
         $totalValue = $categories->sum('price');
-
+        
         $this->serviceValue = $totalValue;
         $this->save();
-
+        
         $pivotData = [];
         foreach ($categories as $category) {
             $pivotData[$category->id] = ['price' => $category->price];
         }
-
-        $this->categories()->sync($pivotData);
-
+        
+        $this->categories()->sync($pivotData);  
+        
         return $this;
     }
 

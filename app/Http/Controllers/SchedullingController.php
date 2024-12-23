@@ -8,6 +8,7 @@ use App\Models\Barber;
 use App\Models\Schedulling;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SchedullingController extends Controller
@@ -95,6 +96,13 @@ class SchedullingController extends Controller
     {
         try {
             $schedulling = Schedulling::findOrFail($id);
+
+            if ($schedulling->status === 'Finalizado') {
+                return response()->json([
+                    'message' => 'Não é possível excluir um agendamento que foi baixado.' 
+                ], 400); 
+            }
+
             $schedulling->delete();
             
             return response()->json('Agendamento deletado com sucesso!', 204);
@@ -104,6 +112,25 @@ class SchedullingController extends Controller
                 'message' => 'Agendamento não encontrado.'
             ], 404);
         }
+    }
+
+    public function concludeScheduling(Request $request, $id)
+    {
+        try {
+            $schedule = Schedulling::findOrFail($id);
+    
+            $data = $request->only(['barber_id', 'payment', 'categories']);
+    
+            $schedule->finalizeScheduling($data);
+    
+            return response()->json(['message' => 'Agendamento finalizado com sucesso.']);
+    
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Agendamento não encontrado.'
+            ], 404);
+        } 
+
     }
 
     public function searchForDay($data)

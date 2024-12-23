@@ -86,9 +86,9 @@ class Schedulling extends Model
         $barberId = $data['barber_id'];
         $clientId = $data['client_id'];
         $serviceTime = $data['serviceTime'];
-    
+
         self::validateServiceTime($barberId, $clientId, $serviceTime);
-    
+
         return self::create($data);
     }
     
@@ -133,4 +133,30 @@ class Schedulling extends Model
         $this->serviceValue = $totalValue;
         $this->save();
     }
+
+
+    public function finalizeScheduling(array $data)
+    {
+        // Atualizar o status para "Finalizado"
+        $this->status = 'Finalizado';
+
+        // Campos permitidos para atualização
+        $fieldsToUpdate = ['barber_id', 'payment'];
+
+        // Atualizar os campos fornecidos no array $data
+        foreach ($fieldsToUpdate as $field) {
+            if (isset($data[$field])) {
+                $this->$field = $data[$field];
+            }
+        }
+
+        // Se categorias foram fornecidas, calcular o total do serviço
+        if (isset($data['categories'])) {
+            $this->CalculateTotalService($data['categories']);
+        }
+
+        // Salvar o agendamento
+        $this->save();
+    }
+
 }

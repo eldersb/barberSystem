@@ -16,6 +16,7 @@ Route::apiResource('client', ClientController::class);
 Route::apiResource('category', CategoryController::class);
 Route::get('schedulling/{data}', [SchedullingController::class, 'searchForDay']);
 Route::get('schedulling/barber/{barberName}', [SchedullingController::class, 'indexByBarberName']);
+Route::patch('schedulling/{id}', [SchedullingController::class, 'concludeScheduling']);
 Route::apiResource('schedulling', SchedullingController::class);
 
 

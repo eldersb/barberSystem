@@ -18,6 +18,7 @@ class BarberResource extends JsonResource
             'id' => $this->id, 
             'name' => $this->name,
             'telephone' => $this->telephone,
+            'cpf' => $this->cpf,
             'status' => $this->status,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,

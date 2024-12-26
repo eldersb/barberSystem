@@ -19,6 +19,7 @@ class BarberFactory extends Factory
         return [
             "name" => $this->faker->name(),
             "telephone" => $this->faker->phoneNumber(),
+            "cpf" => $this->faker->regexify('[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}'),
             "status" => $this->faker->randomElement(['Disponível', 'Indisponível'])
         ];
     }

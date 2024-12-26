@@ -8,14 +8,16 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     */
+    */
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('telephone')->nullable();
+            $table->string('telephone');
+            $table->string('cpf');
             $table->string('address')->nullable();
+            $table->string('cep')->nullable();
             $table->date('birthDate');
             $table->timestamps();
         });
@@ -23,7 +25,7 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     */
+    */
     public function down(): void
     {
         Schema::dropIfExists('clients');

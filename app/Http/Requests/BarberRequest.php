@@ -24,6 +24,7 @@ class BarberRequest extends FormRequest
         return [
             'name' => 'required|string|min:3|unique:barbers,name',
             'telephone' => 'required|numeric|digits:11',
+            'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:barbers,cpf',
             'status' => 'required|string|in:Disponível,Indisponível',       
         ];
     }
@@ -38,6 +39,10 @@ class BarberRequest extends FormRequest
             'telephone.required' => 'O telefone é obrigatório.',
             'telephone.numeric' => 'O telefone deve conter números',
             'telephone.digits' => 'O telefone deve conter até 11 digitos.',
+
+            'cpf.required' => 'Digite um cpf válido!',
+            'cpf.regex' => 'O cpf deve ser em um formato válido!',
+            'cpf.unique' => 'Já existe um barbeiro cadastrado com este cpf.',
 
             'status.required' => 'O status é obrigatório.',
             'status.in' => 'O status deve ser "Disponível" ou "Indisponível".'

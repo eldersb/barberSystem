@@ -8,11 +8,15 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SchedullingController;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('barber', BarberController::class)->middleware('auth:api');
 Route::apiResource('client', ClientController::class)->middleware('auth:api');
-Route::apiResource('category', CategoryController::class);
-Route::apiResource('schedulling', SchedullingController::class);
 
+Route::get('barber/search', [BarberController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro
+Route::apiResource('barber', BarberController::class)->middleware('auth:api');
+
+Route::get('category/search', [CategoryController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro
+Route::apiResource('category', CategoryController::class)->middleware('auth:api');
+
+Route::apiResource('schedulling', SchedullingController::class)->middleware('auth:api');;
 Route::get('schedulling/search/{data}', [SchedullingController::class, 'searchForDay']);
 Route::get('schedulling/search/barber/{barberName}', [SchedullingController::class, 'indexByBarberName']);
 Route::patch('schedulling/{id}', [SchedullingController::class, 'concludeScheduling']);

@@ -25,7 +25,7 @@ class BarberRequest extends FormRequest
             'name' => 'required|string|min:3|unique:barbers,name',
             'telephone' => 'required|numeric|digits:11',
             'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:barbers,cpf',
-            'status' => 'required|string|in:Disponível,Indisponível',       
+            'status' => 'required|string|in:Ativo,Inativo',       
         ];
     }
 
@@ -45,7 +45,7 @@ class BarberRequest extends FormRequest
             'cpf.unique' => 'Já existe um barbeiro cadastrado com este cpf.',
 
             'status.required' => 'O status é obrigatório.',
-            'status.in' => 'O status deve ser "Disponível" ou "Indisponível".'
+            'status.in' => 'O status deve ser "Ativo" ou "Inativo".'
         ];
     }
 }

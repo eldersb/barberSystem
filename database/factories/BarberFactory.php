@@ -20,7 +20,8 @@ class BarberFactory extends Factory
             "name" => $this->faker->name(),
             "telephone" => $this->faker->phoneNumber(),
             "cpf" => $this->faker->regexify('[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}'),
-            "status" => $this->faker->randomElement(['Disponível', 'Indisponível'])
+            "email" => $this->faker->email(),
+            "status" => $this->faker->randomElement(['Ativo', 'Inativo'])
         ];
     }
 }

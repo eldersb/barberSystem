@@ -14,6 +14,7 @@ class Barber extends Model
         "name",
         "telephone",
         "cpf",
+        "email",
         "status"
     ];
 

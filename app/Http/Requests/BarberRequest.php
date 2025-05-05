@@ -25,7 +25,8 @@ class BarberRequest extends FormRequest
             'name' => 'required|string|min:3|unique:barbers,name',
             'telephone' => 'required|numeric|digits:11',
             'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:barbers,cpf',
-            'status' => 'required|string|in:Ativo,Inativo',       
+            'email' => 'required|string|email',
+            'status' => 'required|string|in:Ativo,Inativo', // Alterar para boolean   
         ];
     }
 
@@ -43,6 +44,8 @@ class BarberRequest extends FormRequest
             'cpf.required' => 'Digite um cpf válido!',
             'cpf.regex' => 'O cpf deve ser em um formato válido!',
             'cpf.unique' => 'Já existe um barbeiro cadastrado com este cpf.',
+
+            'email.email' => 'Digite um endereço de e-mail válido',
 
             'status.required' => 'O status é obrigatório.',
             'status.in' => 'O status deve ser "Ativo" ou "Inativo".'

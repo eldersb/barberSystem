@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('telephone');
             $table->string('cpf');
+            $table->string('email');
             $table->string('status');
             $table->timestamps();
         });

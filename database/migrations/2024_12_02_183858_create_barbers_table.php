@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('telephone');
             $table->string('cpf');
             $table->string('email');
-            $table->string('status');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

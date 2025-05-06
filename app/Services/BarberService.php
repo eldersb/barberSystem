@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Barber;
+use App\Http\Resources\BarberResource;
 
 class BarberService
 {
@@ -16,16 +17,27 @@ class BarberService
 
     public function getAll()
     {
-        return $this->barber->all();
+        return BarberResource::collection($this->barber->all());        
     }
 
-    public function searchByName(string $name)
+    public function searchByNameOrCpf(string $keyword)
     {
-        return Barber::where('name', 'LIKE', "%{$name}%")->get();
+        $results = Barber::where(function($query) use ($keyword) {
+            $query->where('name', 'LIKE', "%{$keyword}%")
+                  ->orWhere('cpf', 'LIKE', "%{$keyword}%");
+        })->get();
+    
+        // Retorna os resultados formatados com BarberResource
+        return BarberResource::collection($results);
     }
 
     public function create(array $data)
     {
+
+        if (isset($data['status']) && is_string($data['status'])) {
+            $data['status'] = $data['status'] === 'Ativo' ? 1 : 0;
+        }
+
         return $this->barber->create($data);
     }
 

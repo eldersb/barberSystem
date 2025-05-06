@@ -26,15 +26,15 @@ class BarberController extends Controller
     public function search(Request $request)
     {
         try {
-            $name = $request->query('name');
-    
-            if (!$name) {
+            $keyword = $request->query('keyword');
+
+            if (!$keyword) {
                 return response()->json([
-                    'message' => 'Parâmetro "name" é obrigatório.'
+                    'message' => 'Parâmetro desconhecido.'
                 ], 400);
             }
     
-            $barbers = $this->barberService->searchByName($name);
+            $barbers = $this->barberService->searchByNameOrCpf($keyword);
     
             if ($barbers->isEmpty()) {
                 return response()->json([
@@ -62,7 +62,7 @@ class BarberController extends Controller
     {
         try {
             $barber = $this->barberService->getById($id);
-            return response()->json($barber);
+            return new BarberResource($barber);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Barbeiro não encontrado.'], 404);
         }

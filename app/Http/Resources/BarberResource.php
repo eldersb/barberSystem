@@ -20,7 +20,7 @@ class BarberResource extends JsonResource
             'telephone' => $this->telephone,
             'cpf' => $this->cpf,
             'email' => $this->email,
-            'status' => $this->status,
+            'status' => $this->status ? 'Ativo' : 'Inativo',
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

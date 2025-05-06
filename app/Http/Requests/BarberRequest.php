@@ -26,7 +26,7 @@ class BarberRequest extends FormRequest
             'telephone' => 'required|numeric|digits:11',
             'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:barbers,cpf',
             'email' => 'required|string|email',
-            'status' => 'required|string|in:Ativo,Inativo', // Alterar para boolean   
+            'status' => 'required|string|in:Ativo,Inativo', 
         ];
     }
 

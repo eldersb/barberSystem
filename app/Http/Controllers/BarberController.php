@@ -52,8 +52,9 @@ class BarberController extends Controller
         }
     }
 
-    public function store(BarberRequest $request)
+    public function store(BarberRequest $request) // Corrigir erro, pois o retorno da json está vindo "Inativo"
     {
+
         $barber = $this->barberService->create($request->validated());
         return response()->json(new BarberResource($barber), 201);
     }

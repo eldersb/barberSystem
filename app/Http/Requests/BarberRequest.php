@@ -26,7 +26,7 @@ class BarberRequest extends FormRequest
             'telephone' => 'required|numeric|digits:11',
             'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:barbers,cpf',
             'email' => 'required|string|email',
-            'status' => 'required|string|in:Ativo,Inativo', 
+            'status' => 'nullable|boolean', 
         ];
     }
 
@@ -47,8 +47,8 @@ class BarberRequest extends FormRequest
 
             'email.email' => 'Digite um endereço de e-mail válido',
 
-            'status.required' => 'O status é obrigatório.',
-            'status.in' => 'O status deve ser "Ativo" ou "Inativo".'
+            // 'status.required' => 'O status é obrigatório.',
+            // 'status.in' => 'O status deve ser "Ativo" ou "Inativo".'
         ];
     }
 }

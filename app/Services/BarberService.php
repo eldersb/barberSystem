@@ -27,17 +27,18 @@ class BarberService
                   ->orWhere('cpf', 'LIKE', "%{$keyword}%");
         })->get();
     
-        // Retorna os resultados formatados com BarberResource
+        
         return BarberResource::collection($results);
     }
 
     public function create(array $data)
     {
 
-        if (isset($data['status']) && is_string($data['status'])) {
-            $data['status'] = $data['status'] === 'Ativo' ? 1 : 0;
-        }
-
+        $data['status'] = $data['status'] ?? 1; 
+        // Solução provisória para erro de retorno do JSON,
+        // Está retornando "Inativo", pois o laravel está avaliando o BarberRequest
+        // Como ao chegar a requisição, vem sem o campo status, ele retorna null (equivalente ao 0)
+        // Dessa forma, retorna "Inativo", mas cadastra no banco como "Ativo"
         return $this->barber->create($data);
     }
 

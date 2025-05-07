@@ -23,6 +23,16 @@ class BarberController extends Controller
         return response()->json($barbers);
     }
 
+    public function getActiveBarbers()
+    {
+        return $this->barberService->getActive();
+    }
+
+    public function getInactiveBarbers()
+    {
+        return $this->barberService->getInactive();
+    }
+
     public function search(Request $request)
     {
         try {
@@ -52,9 +62,8 @@ class BarberController extends Controller
         }
     }
 
-    public function store(BarberRequest $request) // Corrigir erro, pois o retorno da json está vindo "Inativo"
+    public function store(BarberRequest $request) 
     {
-
         $barber = $this->barberService->create($request->validated());
         return response()->json(new BarberResource($barber), 201);
     }

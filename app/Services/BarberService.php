@@ -20,6 +20,18 @@ class BarberService
         return BarberResource::collection($this->barber->all());        
     }
 
+    public function getActive()
+    {
+        $activeBarbers = $this->barber->where('status', 1)->get();
+        return BarberResource::collection($activeBarbers);
+    }
+
+    public function getInactive()
+    {
+        $inactiveBarbers = $this->barber->where('status', 0)->get();
+        return BarberResource::collection($inactiveBarbers);
+    }
+
     public function searchByNameOrCpf(string $keyword)
     {
         $results = Barber::where(function($query) use ($keyword) {
@@ -59,6 +71,7 @@ class BarberService
     public function delete(string $id): void
     {
         $barber = Barber::findOrFail($id);
-        $barber->delete();
+        $barber->status = 0; 
+        $barber->save();
     }
 }

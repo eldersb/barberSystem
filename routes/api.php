@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('client', ClientController::class)->middleware('auth:api');
 
 Route::get('barber/search', [BarberController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro
+Route::get('/barber/active', [BarberController::class, 'getActiveBarbers'])->middleware('auth:api');
+Route::get('/barber/inactive', [BarberController::class, 'getInactiveBarbers'])->middleware('auth:api');
 Route::apiResource('barber', BarberController::class)->middleware('auth:api');
 
 Route::get('category/search', [CategoryController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro

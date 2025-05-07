@@ -56,7 +56,7 @@ class BarberController extends Controller
     
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Erro interno ao buscar categoria.',
+                'message' => 'Erro interno ao buscar barbeiro.',
                 'error' => env('APP_DEBUG') ? $e->getMessage() : null
             ], 500);
         }

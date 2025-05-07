@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SchedullingController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('client/search', [ClientController::class, 'search'])->middleware('auth:api'); 
 Route::apiResource('client', ClientController::class)->middleware('auth:api');
 
 Route::get('barber/search', [BarberController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro

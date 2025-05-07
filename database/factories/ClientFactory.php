@@ -20,6 +20,7 @@ class ClientFactory extends Factory
             "name" => $this->faker->name(),
             "telephone" => $this->faker->phoneNumber(),
             "cpf" => $this->faker->regexify('[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}'),
+            "email" => $this->faker->email(),
             "address" => $this->faker->address(),
             "cep" => $this->faker->numerify('########'),
             'birthdate' => $this->faker->date($format = 'Y-m-d', $max = '2005-12-31'), // Até 2005

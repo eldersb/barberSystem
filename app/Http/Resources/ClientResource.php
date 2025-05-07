@@ -19,11 +19,10 @@ class ClientResource extends JsonResource
         'name' => $this->name,
         'telephone' => $this->telephone,
         'cpf' => $this->cpf,
+        'email' => $this->email,
         'address' => $this->address,
         'cep' => $this->cep,
         'birthDate' => $this->birthDate,
-        'updated_at' => $this->updated_at,
-        'created_at' => $this->created_at,
         ];  
      }
 }

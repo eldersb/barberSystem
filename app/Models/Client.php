@@ -13,6 +13,7 @@ class Client extends Model
         "name",
         "telephone",
         "cpf",
+        "email",
         "address",
         "cep",
         "birthDate"

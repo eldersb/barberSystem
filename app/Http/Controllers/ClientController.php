@@ -2,41 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\ClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use App\Services\ClientService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+     protected $clientService;
+
+    public function __construct(ClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
+
     public function index()
     {
-        $clients = Client::all();
+        $clients = $this->clientService->getAll();
         return response()->json($clients);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function search(Request $request)
+    {
+        try {
+            $keyword = $request->query('keyword');
+
+            if (!$keyword) {
+                return response()->json([
+                    'message' => 'Parâmetro desconhecido.'
+                ], 400);
+            }
+    
+            $barbers = $this->clientService->searchByNameOrCpf($keyword);
+    
+            if ($barbers->isEmpty()) {
+                return response()->json([
+                    'message' => 'Nenhum cliente encontrado.'
+                ], 404);
+            }
+    
+            return response()->json($barbers);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro interno ao buscar cliente.',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
     public function store(ClientRequest $request)
     {
-        $client = Client::create($request->validated());
-
+        $client = $this->clientService->create($request->validated());
         return response()->json(new ClientResource($client), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         try {
-            $client = Client::findOrFail($id);
-            return response()->json($client);
+            $client = $this->clientService->getById($id);
+            return new ClientResource($client);
             
         } catch (ModelNotFoundException $e) {
             return response()->json([

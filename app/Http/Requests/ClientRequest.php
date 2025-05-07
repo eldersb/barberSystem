@@ -25,6 +25,7 @@ class ClientRequest extends FormRequest
             'name' => 'required|string|min:3|unique:clients,name',
             'telephone' => 'required|string|max:11|unique:clients,telephone',
             'cpf' => 'required|string|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/|unique:clients,cpf',
+            'email' => 'string|email',
             'address' => 'required|string',
             'cep' => 'required|string',
             'birthDate' => 'required|date|before_or_equal:today'
@@ -46,6 +47,8 @@ class ClientRequest extends FormRequest
                 'cpf.required' => 'Digite um cpf válido!',
                 'cpf.regex' => 'O cpf deve ser em um formato válido!',
                 'cpf.unique' => 'Já existe um cliente cadastrado com esse cpf.',
+
+                'email.email' => 'Digite um e-mail válido!',
                 
                 'address.required' => 'O endereço é obrigatório.',
                 'address.string' => 'O endereço deve ser uma string.',

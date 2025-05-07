@@ -26,7 +26,6 @@ class ClientService
             $query->where('name', 'LIKE', "%{$keyword}%")
                   ->orWhere('cpf', 'LIKE', "%{$keyword}%");
         })->get();
-    
         
         return ClientResource::collection($clients);
     }

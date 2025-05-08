@@ -30,7 +30,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('schedulling', SchedullingController::class)->middleware('auth:api');;
     Route::get('schedulling/search/{data}', [SchedullingController::class, 'searchForDay']);
     Route::get('schedulling/search/barber/{barberName}', [SchedullingController::class, 'indexByBarberName']);
-    Route::patch('schedulling/{id}', [SchedullingController::class, 'concludeScheduling']);
+    Route::patch('scheduling/{id}', [SchedullingController::class, 'concludeScheduling']);
 });
 
 

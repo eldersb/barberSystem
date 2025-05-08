@@ -2,31 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Schedulling;
-use App\Http\Resources\SchedullingResource;
+use App\Models\Scheduling;
+use App\Http\Resources\SchedulingResource;
 use App\Models\Barber;
 
 class SchedulingService
 {
     protected $scheduling;
 
-    public function __construct(Schedulling $scheduling)
+    public function __construct(Scheduling $scheduling)
     {
         $this->scheduling = $scheduling;
     }
 
     public function getAll()
     {
-        $schedullings = $this->scheduling->with('categories')->get();
-        return SchedullingResource::collection($schedullings);    
+        $schedulings = $this->scheduling->with('categories')->get();
+        return SchedulingResource::collection($schedulings);    
     }
 
-    public function getById(string $id): SchedullingResource
+    public function getById(string $id): SchedulingResource
     {
-        $schedulling = Schedulling::findOrFail($id);
-        $schedulling->load('categories');
+        $scheduling = Scheduling::findOrFail($id);
+        $scheduling->load('categories');
 
-        return new SchedullingResource($schedulling);
+        return new SchedulingResource($scheduling);
     }
 
     public function getByBarberName(string $barberName)
@@ -37,32 +37,32 @@ class SchedulingService
             return null; 
         }
 
-        $schedullings = Schedulling::where('barber_id', $barber->id)
+        $schedullings = Scheduling::where('barber_id', $barber->id)
             ->with('categories')
             ->get();
 
-        return SchedullingResource::collection($schedullings);
+        return SchedulingResource::collection($schedullings);
     }
 
     public function searchForDay(string $date)
     {
-        return SchedullingResource::collection(Schedulling::forDay($date)->get());
+        return SchedulingResource::collection(Scheduling::forDay($date)->get());
     }
 
-    public function create(array $data, array $categories): SchedullingResource
+    public function create(array $data, array $categories): SchedulingResource
     {
-        $scheduling = Schedulling::createService($data);
+        $scheduling = Scheduling::createService($data);
 
         $scheduling->CalculateTotalService($categories);
 
         $scheduling->load('categories');
 
-        return new SchedullingResource($scheduling);
+        return new SchedulingResource($scheduling);
     }
 
-    public function update(string $id, array $data): SchedullingResource
+    public function update(string $id, array $data): SchedulingResource
     {
-        $schedulling = Schedulling::findOrFail($id);
+        $schedulling = Scheduling::findOrFail($id);
 
         $schedulling = $schedulling->updateSchedullingWithCategories(
             $data,
@@ -71,12 +71,12 @@ class SchedulingService
 
         $schedulling->load('categories');
 
-        return new SchedullingResource($schedulling);
+        return new SchedulingResource($schedulling);
     }
 
     public function conclude(string $id): void
     {
-        $scheduling = Schedulling::findOrFail($id);
+        $scheduling = Scheduling::findOrFail($id);
 
         if ($scheduling->status === 'Finalizado') {
             throw new \Exception('Esse agendamento já foi finalizado.');

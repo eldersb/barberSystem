@@ -31,7 +31,7 @@ class Barber extends Model
         }
 
         // Verificando se o horário já está ocupado por outro agendamento
-        $agendamentoExistente = Schedulling::where('barbeiro_id', $this->id)
+        $agendamentoExistente = Scheduling::where('barbeiro_id', $this->id)
             ->where('data_hora', $dataHora)
             ->exists();
 

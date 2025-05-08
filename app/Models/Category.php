@@ -18,7 +18,7 @@ class Category extends Model
 
     public function schedullings()
     {
-        return $this->belongsToMany(Schedulling::class, 'category_schedulling')
+        return $this->belongsToMany(Scheduling::class, 'category_scheduling')
                     ->withPivot('price'); // Inclui o preço na tabela intermediária
     }
 

@@ -9,9 +9,9 @@ return new class extends Migration
     
     public function up(): void
     {
-        Schema::create('category_schedulling', function (Blueprint $table) {
+        Schema::create('category_scheduling', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('schedulling_id')->constrained()->onDelete('cascade');
+            $table->foreignId('scheduling_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->decimal('price', 8, 2);  
             $table->timestamps();
@@ -21,6 +21,6 @@ return new class extends Migration
    
     public function down(): void
     {
-        Schema::dropIfExists('category_schedulling');
+        Schema::dropIfExists('category_scheduling');
     }
 };

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SchedullingRequest;
-use App\Http\Resources\SchedullingResource;
-use App\Models\Schedulling;
+use App\Http\Requests\SchedulingRequest;
+use App\Http\Resources\SchedulingResource;
+use App\Models\Scheduling;
 use App\Services\SchedulingService;
 use Dotenv\Exception\ValidationException;
-use Illuminate\Http\Request;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class SchedullingController extends Controller
+class SchedulingController extends Controller
 {
 
     protected $schedulingService;
@@ -48,7 +48,7 @@ class SchedullingController extends Controller
         }
     }
 
-    public function store(SchedullingRequest $request)
+    public function store(SchedulingRequest $request)
     {
         try {
             $schedulingResource = $this->schedulingService->create(
@@ -77,7 +77,7 @@ class SchedullingController extends Controller
         }
     }
 
-    public function update(SchedullingRequest $request, string $id)
+    public function update(SchedulingRequest $request, string $id)
     {
         try {       
             $schedullingResource = $this->schedulingService->update(
@@ -97,7 +97,7 @@ class SchedullingController extends Controller
     public function destroy(string $id)
     {
         try {
-            $schedulling = Schedulling::findOrFail($id);
+            $schedulling = Scheduling::findOrFail($id);
 
             if ($schedulling->status === 'Finalizado') {
                 return response()->json([

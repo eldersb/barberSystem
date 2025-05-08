@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BarberController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\SchedullingController;
+use App\Http\Controllers\SchedulingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,10 +27,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category/search', [CategoryController::class, 'search'])->middleware('auth:api'); // Se colocar em baixo da rota abaixo da erro
     Route::apiResource('category', CategoryController::class)->middleware('auth:api');
 
-    Route::apiResource('schedulling', SchedullingController::class)->middleware('auth:api');;
-    Route::get('schedulling/search/{data}', [SchedullingController::class, 'searchForDay']);
-    Route::get('schedulling/search/barber/{barberName}', [SchedullingController::class, 'indexByBarberName']);
-    Route::patch('scheduling/{id}', [SchedullingController::class, 'concludeScheduling']);
+    Route::apiResource('schedulling', SchedulingController::class)->middleware('auth:api');;
+    Route::get('schedulling/search/{data}', [SchedulingController::class, 'searchForDay']);
+    Route::get('schedulling/search/barber/{barberName}', [SchedulingController::class, 'indexByBarberName']);
+    Route::patch('scheduling/{id}', [SchedulingController::class, 'concludeScheduling']);
 });
 
 

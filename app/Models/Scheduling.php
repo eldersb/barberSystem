@@ -7,7 +7,7 @@ use Dotenv\Exception\ValidationException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Schedulling extends Model
+class Scheduling extends Model
 {
     use HasFactory;
 
@@ -21,11 +21,11 @@ class Schedulling extends Model
         "status" 
     ];
 
-    protected $table = "schedullings";
+    protected $table = "schedulings";
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'category_schedulling')
+        return $this->belongsToMany(Category::class, 'category_scheduling')
             ->withPivot('price'); 
     }
 

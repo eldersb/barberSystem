@@ -21,8 +21,8 @@ class Client extends Model
 
     protected $table = "clients";
 
-    public function schedullings()
+    public function schedulings()
     {
-        return $this->hasMany(Schedulling::class, 'client_id');
+        return $this->hasMany(Scheduling::class, 'client_id');
     }
 }

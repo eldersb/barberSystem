@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use Illuminate\Support\Facades\Cache;
 
 class ClientService
 {
@@ -17,7 +18,9 @@ class ClientService
 
     public function getAll()
     {
-        return ClientResource::collection($this->client->all());        
+        return Cache::remember('clients', 3600, function () {  
+            return ClientResource::collection($this->client->all());    
+         });    
     }
 
     public function searchByNameOrCpf(string $keyword)
@@ -32,7 +35,14 @@ class ClientService
 
     public function create(array $data)
     {
-        return $this->client->create($data);
+        $client = $this->client->create($data);
+
+         Cache::forget('clients');
+
+         Cache::put('clients', ClientResource::collection($this->client->all()), 3600);
+
+         return $client;
+
     }
 
     public function getById(string $id)

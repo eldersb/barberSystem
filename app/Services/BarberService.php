@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Barber;
 use App\Http\Resources\BarberResource;
+use Illuminate\Support\Facades\Cache;
 
 class BarberService
 {
@@ -17,19 +18,27 @@ class BarberService
 
     public function getAll()
     {
-        return BarberResource::collection($this->barber->all());        
+
+        return Cache::remember('barbers', 3600, function () {  
+            return BarberResource::collection(Barber::all());
+        });
+    
     }
 
     public function getActive()
     {
-        $activeBarbers = $this->barber->where('status', 1)->get();
-        return BarberResource::collection($activeBarbers);
+         return Cache::remember('active_barbers', 3600, function () {
+            $activeBarbers = $this->barber->where('status', 1)->get();
+            return BarberResource::collection($activeBarbers);
+         });
     }
 
     public function getInactive()
     {
-        $inactiveBarbers = $this->barber->where('status', 0)->get();
-        return BarberResource::collection($inactiveBarbers);
+        return Cache::remember('inactive_barbers', 3600, function () {
+            $inactiveBarbers = $this->barber->where('status', 0)->get();
+            return BarberResource::collection($inactiveBarbers);
+        });
     }
 
     public function searchByNameOrCpf(string $keyword)
@@ -47,11 +56,17 @@ class BarberService
     {
 
         $data['status'] = $data['status'] ?? 1; 
-        // Solução provisória para erro de retorno do JSON,
-        // Está retornando "Inativo", pois o laravel está avaliando o BarberRequest
-        // Como ao chegar a requisição, vem sem o campo status, ele retorna null (equivalente ao 0)
-        // Dessa forma, retorna "Inativo", mas cadastra no banco como "Ativo"
-        return $this->barber->create($data);
+
+        $barber = $this->barber->create($data);
+
+        Cache::forget('barbers');
+        Cache::forget('active_barbers');
+
+        Cache::put('active_barbers', BarberResource::collection($this->barber->where('status', 1)->get()), 3600);
+        Cache::put('barbers', BarberResource::collection($this->barber->all()), 3600);
+
+        return $barber;
+
     }
 
     public function getById(string $id)
@@ -64,6 +79,11 @@ class BarberService
         $barber = $this->getById($id);
        
         $barber->update($data);
+
+        Cache::forget('barbers');
+
+        Cache::put('barbers', BarberResource::collection($this->barber->all()), 3600);
+
 
         return $barber;
     }

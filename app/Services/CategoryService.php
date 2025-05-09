@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryService
 {
@@ -16,7 +18,10 @@ class CategoryService
 
     public function getAll()
     {
-        return $this->category->all();
+        return Cache::remember('categories', 3600, function () {  
+            return CategoryResource::collection($this->category->all());
+        });
+    
     }
 
     public function searchByName(string $name)
@@ -26,7 +31,14 @@ class CategoryService
 
     public function create(array $data)
     {
-        return $this->category->create($data);
+        $category = $this->category->create($data);
+
+        Cache::forget('barbers');
+
+        Cache::put('categories', CategoryResource::collection($this->category->all()), 3600);
+
+        return $category;
+
     }
 
     public function getById(string $id)
@@ -39,6 +51,10 @@ class CategoryService
         $category = $this->getById($id);
        
         $category->update($data);
+
+        Cache::forget('categories');
+
+        Cache::put('categories', CategoryResource::collection($this->category->all()), 3600);
 
         return $category;
     }

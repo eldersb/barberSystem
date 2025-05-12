@@ -2,7 +2,15 @@
 
 return [
 
-'states' => [
+    'user_types' => [
+        ['label' => 'Gerente', 'value' => 'manager'],
+        ['label' => 'Desenvolvedor', 'value' => 'developer'],
+        ['label' => 'Operador', 'value' => 'operator'],
+        ['label' => 'Barbeiro', 'value' => 'barber']
+
+    ],
+
+    'states' => [
         'AC' => 'Acre',
         'AL' => 'Alagoas',
         'AP' => 'Amapá',

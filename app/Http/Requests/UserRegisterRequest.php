@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class UserRegisterRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UserRegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +23,20 @@ class UserRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
+        $validRoles = collect(config('constants.user_types'))->pluck('value')->toArray();
+
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            'role' => ['required', Rule::in($validRoles)],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'role.in' => 'Tipo de usuário inválido.',
         ];
     }
 }

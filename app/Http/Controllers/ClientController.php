@@ -78,10 +78,7 @@ class ClientController extends Controller
     public function update(ClientRequest $request, string $id)
     {
         try{
-            $client = Client::findOrFail($id);
-
-            $client->update($request->validated());
-
+             $client = $this->clientService->update($id, $request->validated());
             return response()->json(new ClientResource($client), 200);
 
         }catch(ModelNotFoundException $e) {
@@ -99,9 +96,9 @@ class ClientController extends Controller
         try {
             $client = Client::findOrFail($id);
 
-            $hasActiveSchedullings = $client->schedullings()->where('status', 'Em andamento')->exists();
+            $hasActiveSchedulings = $client->schedulings()->where('status', 'Em andamento')->exists();
 
-            if ($hasActiveSchedullings) {
+            if ($hasActiveSchedulings) {
                 return response()->json([
                     'error' => 'O cliente não pode ser excluído porque possui agendamentos ativos.'
                 ], 400); 

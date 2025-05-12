@@ -13,13 +13,19 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('telephone');
-            $table->string('cpf');
+            $table->string('first_name', 50);
+            $table->string('last_name', 100);
+            $table->enum('gender', ['Masculino', 'Feminino', 'Outros']);
+            $table->date('birthDate')->nullable();
+            $table->string('document', 50);
+            $table->char('telephone', 11);
+            $table->string('street_name', 255)->nullable();
+            $table->string('street_number', 20)->nullable();
+            $table->string('city', 255)->nullable();
+            $table->char('state', 2)->nullable();
+            $table->string('neighborhood', 255)->nullable();
             $table->string('email');
-            $table->string('address')->nullable();
             $table->string('cep')->nullable();
-            $table->date('birthDate');
             $table->timestamps();
         });
     }

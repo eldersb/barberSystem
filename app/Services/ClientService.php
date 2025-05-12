@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
 
 class ClientService
 {
@@ -26,8 +28,10 @@ class ClientService
     public function searchByNameOrCpf(string $keyword)
     {
         $clients = Client::where(function($query) use ($keyword) {
-            $query->where('name', 'LIKE', "%{$keyword}%")
-                  ->orWhere('cpf', 'LIKE', "%{$keyword}%");
+             $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'LIKE', "%{$keyword}%")
+              ->orWhere('first_name', 'LIKE', "%{$keyword}%")
+              ->orWhere('last_name', 'LIKE', "%{$keyword}%")
+              ->orWhere('document', 'LIKE', "%{$keyword}%");
         })->get();
         
         return ClientResource::collection($clients);

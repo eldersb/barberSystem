@@ -16,12 +16,22 @@ class ClientFactory extends Factory
      */
     public function definition(): array
     {
+
+        $states = collect(config('constants')['states'])
+            ->keys();
+
         return [
-            "name" => $this->faker->name(),
-            "telephone" => $this->faker->phoneNumber(),
-            "cpf" => $this->faker->regexify('[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}'),
+            "first_name" => $this->faker->firstName(),
+            "last_name" => $this->faker->lastName(),
+            "gender" => $this->faker->randomElement(['Masculino', 'Feminino', 'Outros']),
+            "telephone" => $this->faker->numerify('###########'),
+            "document" => $this->faker->regexify('[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}'),
             "email" => $this->faker->email(),
-            "address" => $this->faker->address(),
+            'street_name' => fake()->streetName(),
+            'street_number' => random_int(1, 999),
+            'state' => fake()->randomElement($states),
+            'city' => fake()->city,
+            'neighborhood' => fake()->city,
             "cep" => $this->faker->numerify('########'),
             'birthdate' => $this->faker->date($format = 'Y-m-d', $max = '2005-12-31'), // Até 2005
         ];

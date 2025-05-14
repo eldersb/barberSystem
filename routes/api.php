@@ -11,11 +11,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [RegisteredUserController::class, 'store']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
-Route::get('user', [AuthController::class, 'user'])->middleware('auth:api');
-
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::get('user/auth', [AuthController::class, 'user']);
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::apiResource('user', RegisteredUserController::class);
+
     Route::get('client/search', [ClientController::class, 'search']); 
     Route::apiResource('client', ClientController::class);
 

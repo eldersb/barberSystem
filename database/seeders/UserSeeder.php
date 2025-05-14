@@ -12,10 +12,9 @@ class UserSeeder extends Seeder
     {
        $this->createDefaultUser();
        User::factory(10)->create();
-
     }
-
-     public function createDefaultUser() : void
+    
+    public function createDefaultUser() : void
     {
          $user = User::firstOrNew(['email' => 'admin@admin.com']);
 
@@ -25,7 +24,7 @@ class UserSeeder extends Seeder
             $user->role = 'developer';
             $user->save();
         } 
-     }
+    }
 
 
 }

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -42,7 +41,7 @@ class AuthController extends Controller
     // Função para obter o usuário autenticado
     public function user()
     {
-        return response()->json(auth()->user()); // Verificar erro
+        return response()->json(Auth::user()); 
     }
 
 }

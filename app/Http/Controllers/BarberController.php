@@ -7,6 +7,9 @@ use App\Http\Requests\BarberRequest;
 use App\Http\Resources\BarberResource;
 use App\Services\BarberService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class BarberController extends Controller
 {
@@ -64,8 +67,27 @@ class BarberController extends Controller
 
     public function store(BarberRequest $request) 
     {
+        try {
+       
         $barber = $this->barberService->create($request->validated());
+
+        Log::info('Novo barbeiro cadastrado com sucesso.', [
+            'barber_id' => $barber->id,
+            'user' => Auth::user()->name, // Acessa a interface Auth, dentro do método user retorna o nome
+            'data' => $request->validated()
+        ]);
+
         return response()->json(new BarberResource($barber), 201);
+        } catch (\Exception $e) {
+            Log::error('Erro ao cadastrar barbeiro.', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'data' => $request,
+                'user' => Auth::user()->name // Acessa a interface Auth, dentro do método user retorna o nome
+            ]);
+
+            // return response()->json(['message' => 'Erro ao cadastrar barbeiro.'], 500);
+        }
     }
 
     public function show(string $id)

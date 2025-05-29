@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3',
+            'name' => 'required|string|min:3|unique:categories,name',
             'price' => 'required|numeric|min:0.01'
         ];
     }
@@ -34,6 +34,7 @@ class CategoryRequest extends FormRequest
         return [
             'name.required' => 'O campo nome não pode ser nulo.',
             'name.min' => 'O nome deve ter mais que 3 caracteres.',
+            'name.unique' => 'O nome dessa categoria já existe.',
             'price.required' => 'O campo preço não pode ser nulo',
             'price.numeric' => 'O preço deve ser um número.',
             'price.min' => 'O preço deve ser maior que zero.'

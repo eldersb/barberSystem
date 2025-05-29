@@ -68,25 +68,22 @@ class BarberController extends Controller
     public function store(BarberRequest $request) 
     {
         try {
-       
-        $barber = $this->barberService->create($request->validated());
+            $barber = $this->barberService->create($request->validated());
 
-        Log::info('Novo barbeiro cadastrado com sucesso.', [
-            'barber_id' => $barber->id,
-            'user' => Auth::user()->name, // Acessa a interface Auth, dentro do método user retorna o nome
-            'data' => $request->validated()
-        ]);
+            Log::info('Novo barbeiro cadastrado com sucesso.', [
+                'barber_id' => $barber->id,
+                'user' => Auth::user()->name, 
+                'data' => $request->validated()
+            ]);
 
-        return response()->json(new BarberResource($barber), 201);
+            return response()->json(new BarberResource($barber), 201);
         } catch (\Exception $e) {
             Log::error('Erro ao cadastrar barbeiro.', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'data' => $request,
-                'user' => Auth::user()->name // Acessa a interface Auth, dentro do método user retorna o nome
+                'user' => Auth::user()->name
             ]);
-
-            // return response()->json(['message' => 'Erro ao cadastrar barbeiro.'], 500);
         }
     }
 
@@ -100,12 +97,24 @@ class BarberController extends Controller
         }
     }
 
-    public function update(BarberRequest $request, string $id)
+    public function update(BarberRequest $request, string $id) // Criar um BarberUpdateRequest
     {
         try {
             $barber = $this->barberService->update($id, $request->validated());
+
+            Log::info('Barbeiro atualizado com sucesso.', [
+            'barber_id' => $barber->id,
+            'user' => Auth::user()->name,
+            'data' => $request->validated()
+            ]);
+
             return response()->json(new BarberResource($barber));
         } catch (ModelNotFoundException $e) {
+            Log::warning('Tentativa de atualizar barbeiro não encontrado.', [
+                    'barber_id' => $id,
+                    'user' => Auth::user()->name 
+            ]);
+
             return response()->json(['message' => 'Barbeiro não encontrado!'], 404);
         }
     }
@@ -114,8 +123,19 @@ class BarberController extends Controller
     {
         try {
             $this->barberService->delete($id);
+
+            Log::info('Barbeiro deletado com sucesso.', [
+            'barber_id' => $id,
+            'user' => Auth::user()->name 
+            ]);
+
             return response()->json('Barbeiro deletado com sucesso', 204);
         } catch (ModelNotFoundException $e) {
+
+            Log::warning('Tentativa de deletar barbeiro não encontrado.', [
+            'barber_id' => $id,
+            'user_id' => Auth::user()->name
+            ]);
             return response()->json(['status' => false, 'message' => 'Barbeiro não encontrado.'], 404);
         }
     }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SchedulingRequest;
-use App\Http\Resources\SchedulingResource;
 use App\Models\Scheduling;
 use App\Services\SchedulingService;
 use Dotenv\Exception\ValidationException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -51,14 +52,23 @@ class SchedulingController extends Controller
     public function store(SchedulingRequest $request)
     {
         try {
-            $schedulingResource = $this->schedulingService->create(
+            $scheduling = $this->schedulingService->create(
                 $request->validated(),
                 $request->validated()['categories']
             );
+
+            Log::info('Agendamento deletado com sucesso.', [
+            'scheduling_id' => $scheduling->id,
+            'user' => Auth::user()->name 
+            ]);
     
-            return response()->json($schedulingResource, 201);
+            return response()->json($scheduling, 201);
     
         } catch (ValidationException $e) {
+            Log::error('Erro de agendamento: Barbeiro já tem um agendamento ativo no horário cadastrado.', [
+                    'scheduling_id' => $request,
+                    'user' => Auth::user()->name 
+            ]);
             return response()->json(['message' => $e->getMessage()], 400);
         }
 

@@ -56,7 +56,7 @@ class SchedulingService
         $scheduling->CalculateTotalService($categories);
 
         $scheduling->load('categories');
-
+    
         return new SchedulingResource($scheduling);
     }
 

@@ -7,6 +7,8 @@ use App\Http\Resources\CategoryResource;
 use App\Services\CategoryService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -55,8 +57,15 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $category = $this->categoryService->create($request->validated());
-        return response()->json(new CategoryResource($category), 201);
-    }
+
+        Log::info('Nova categoria cadastrada.', [
+            'category_id' => $category->id,
+            'user' => Auth::user()->name, 
+            'category' => $request->validated()
+        ]);
+
+        return response()->json(new CategoryResource($category), 201);   
+     }
 
     public function show(string $id)
     {
@@ -68,12 +77,24 @@ class CategoryController extends Controller
         }
     }
 
-    public function update(CategoryRequest $request, string $id)
+    public function update(CategoryRequest $request, string $id) // Criar um CategoryUpdateRequest
     {
         try {
             $category = $this->categoryService->update($id, $request->validated());
+
+            Log::info('Categoria atualizada com sucesso.', [
+                'category_id' => $category->id,
+                'user' => Auth::user()->name,
+                'data' => $request->validated()
+            ]);
+
             return response()->json(new CategoryResource($category));
         } catch (ModelNotFoundException $e) {
+            Log::warning('Tentativa de atualizar a categoria não encontrada.', [
+                'category_id' => $id,
+                'user' => Auth::user()->name 
+            ]);
+
             return response()->json(['message' => 'Categoria não encontrada!'], 404);
         }
     }
@@ -82,8 +103,20 @@ class CategoryController extends Controller
     {
         try {
             $this->categoryService->delete($id);
+
+            Log::info('Categoria deletada com sucesso.', [
+            'category_id' => $id,
+            'user' => Auth::user()->name 
+            ]);
+
             return response()->json('Categoria deletada com sucesso', 204);
         } catch (ModelNotFoundException $e) {
+
+            Log::warning('Tentativa de deletar categoria não encontrado.', [
+            'category_id' => $id,
+            'user_id' => Auth::user()->name 
+            ]);
+
             return response()->json(['status' => false, 'message' => 'Categoria não encontrada.'], 404);
         }
     }

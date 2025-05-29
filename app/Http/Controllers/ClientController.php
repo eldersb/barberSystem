@@ -8,10 +8,12 @@ use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use App\Services\ClientService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
-     protected $clientService;
+    protected $clientService;
 
     public function __construct(ClientService $clientService)
     {
@@ -23,7 +25,7 @@ class ClientController extends Controller
         $clients = $this->clientService->getAll();
         return response()->json($clients);
     }
-
+ 
     public function search(Request $request)
     {
         try {
@@ -56,6 +58,13 @@ class ClientController extends Controller
     public function store(ClientRequest $request)
     {
         $client = $this->clientService->create($request->validated());
+
+          Log::info('Novo cliente cadastrado.', [
+            'client_id' => $client->id,
+            'user' => Auth::user()->name, 
+            'category' => $request->validated()
+        ]);
+
         return response()->json(new ClientResource($client), 201);
     }
 
@@ -72,25 +81,33 @@ class ClientController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ClientRequest $request, string $id)
     {
         try{
              $client = $this->clientService->update($id, $request->validated());
+
+              Log::info('Cliente atualizado com sucesso.', [
+                'client_id' => $client->id,
+                'user' => Auth::user()->name,
+                'data' => $request->validated()
+            ]);
+
             return response()->json(new ClientResource($client), 200);
 
         }catch(ModelNotFoundException $e) {
+
+             Log::warning('Tentativa de atualizar a cliente não encontrado.', [
+                'category_id' => $id,
+                'user' => Auth::user()->name 
+            ]);
+
             return response()->json([
                 'message' => "Cliente não encontrado!",
             ], 404);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+   
     public function destroy(string $id) // Cliente com agendamento ativo não pode ser excluído 
     {
         try {
@@ -105,13 +122,24 @@ class ClientController extends Controller
             }
 
             $client->delete();
+
+             Log::info('Cliente deletado com sucesso.', [
+            'client_id' => $id,
+            'user' => Auth::user()->name 
+            ]);
             
             return response()->json('Cliente deletado ccom sucesso', 204);
             
         } catch (ModelNotFoundException $e) {
+
+            Log::warning('Tentativa de deletar cliente não encontrado.', [
+            'category_id' => $id,
+            'user_id' => Auth::user()->name 
+            ]);
+
             return response()->json([
                 'status' => false,
-                'message' => 'Barbeiro não encontrado.'
+                'message' => 'Cliente não encontrado.'
             ], 404);
         }
     }
